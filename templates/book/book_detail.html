@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ object.title }}</title>
+</head>
+<body>
+    <h1>{{ object.title }}</h1>   
+    <img src="{{ object.image.url }}" alt="itss">
+    <h4>Description: {{object.description}}</h4>
+    <h4>Price: {{object.price}}</h4>
+    <h4>Page: {{object.page}}</h4> 
+
+    <button>
+        <a href="{% url 'products:book_delete' object.pk %}">Delete </a>
+    </button>
+</body>
+</html>
