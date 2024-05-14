@@ -12,13 +12,11 @@
     <h4>Price: {{object.price}}</h4>
     <h4>Page: {{object.page}}</h4> 
 
-    <button>
-        <a href="{% url 'products:book_delete' object.pk %}">Delete </a>
-    </button>
+    
     
     <h2>Reviews</h2>
     <a href="{% url 'products:add_review' book.pk %}" >Add Review</a>
-    {% for review in review %}
+    {% for review in reviews %}
         <h4>{{ review.user.username }} | {{ review.rating }}</h4>
         <p>{{ review.comment }}</p><hr>
     {% endfor %}

@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, UpdateView,CreateView,   DeleteView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from django.shortcuts import render,redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
@@ -17,9 +17,19 @@ class BookListView(ListView):
     template_name = 'book/book_list.html'
     context_object_name = 'book'
 
+
 class BookDetailView(DetailView):
     model = Book
     template_name = 'book/book_detail.html'
+    def get(self, request, pk):
+        book = Book.objects.get(pk=pk)
+        reviews = Review.objects.filter(book=pk)
+        print(reviews)
+        context = {
+            'book': book,
+            'reviews': reviews
+        }
+        return render(request, 'book/book_detail.html', context=context)
 
 
 class BookCreateView(CreateView):
