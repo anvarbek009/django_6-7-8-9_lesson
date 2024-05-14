@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login,logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CustomUserForm
+from django.contrib import messages
 # Create your views here.
 
 class RegisterView(View):
@@ -19,11 +20,13 @@ class RegisterView(View):
         create_form = CustomUserForm(data=request.POST, files=request.FILES)
         if create_form.is_valid():
             create_form.save()
+            messages.success(request, 'Registration successful!')             
             return redirect('users:login')
         else:
             context = {
                 'form': create_form
             }
+            messages.error(request,'Something is wrong! \nTry again')
             return render(request, 'register.html', context=context)
 
 
@@ -63,6 +66,7 @@ class LoginView(View):
         if login_form.is_valid():
             user = login_form.get_user()
             login(request, user)
+            messages.success(request, 'You are now logged in') 
             return redirect('home:landing_page')
         else:
             context = {
@@ -74,4 +78,5 @@ class LoginView(View):
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
+        messages.success(request, 'You are now logged out')
         return redirect('home:landing_page')

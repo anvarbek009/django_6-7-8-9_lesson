@@ -5,6 +5,8 @@ from django.views import View
 from .models import Book,Review
 from .forms import AddReviewForm
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect 
+from django.contrib import messages
 # Create your views here.
 
 # class ListView(View):
@@ -15,7 +17,7 @@ from django.urls import reverse_lazy
 class BookListView(ListView):
     model = Book
     template_name = 'book/book_list.html'
-    context_object_name = 'book'
+    context_object_name = 'books'
 
 
 class BookDetailView(DetailView):
@@ -24,11 +26,11 @@ class BookDetailView(DetailView):
     def get(self, request, pk):
         book = Book.objects.get(pk=pk)
         reviews = Review.objects.filter(book=pk)
-        print(reviews)
         context = {
             'book': book,
             'reviews': reviews
         }
+
         return render(request, 'book/book_detail.html', context=context)
 
 
@@ -65,4 +67,21 @@ class AddReviewView(LoginRequiredMixin, View):
             )
 
             review.save()
+            messages.success(request, "Comment qo'shildi.")
             return redirect('products:book_detail', pk=pk)
+        
+class ReviewDeleteView(View):
+    def post(self, request, pk):
+        review = Review.objects.get(pk=pk)
+        book_pk = review.book.pk
+        review.delete()
+        messages.success(request, "Comment o'chirildi.")
+        # messages.error(request, "Comment o'chirilmadi")
+        return HttpResponseRedirect(reverse_lazy('products:book_detail', kwargs={'pk': book_pk}))
+
+class ReviewUpdateView(View):
+    def post(self, request, pk):
+        review = Review.objects.get(pk=pk)
+        book_pk = review.book.pk
+        messages.error(request, "Comment yangilanmadi.")
+        return HttpResponseRedirect(reverse_lazy('products:book_detail', kwargs={'pk': book_pk}))
