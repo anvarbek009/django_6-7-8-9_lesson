@@ -9,6 +9,6 @@ def landing_page(request):
 class GetTest(LoginRequiredMixin,View):
     def get(self,request):
         if request.user.is_authenticated():    
-            return render(request, 'get_test.html')
+            return render(request, 'users:logout')
         else:
             return render(request, 'users:login')

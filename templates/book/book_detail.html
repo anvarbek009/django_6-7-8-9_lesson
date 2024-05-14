@@ -15,5 +15,12 @@
     <button>
         <a href="{% url 'products:book_delete' object.pk %}">Delete </a>
     </button>
+    
+    <h2>Reviews</h2>
+    <a href="{% url 'products:add_review' book.pk %}" >Add Review</a>
+    {% for review in review %}
+        <h4>{{ review.user.username }} | {{ review.rating }}</h4>
+        <p>{{ review.comment }}</p><hr>
+    {% endfor %}
 </body>
 </html>

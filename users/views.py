@@ -63,7 +63,7 @@ class LoginView(View):
         if login_form.is_valid():
             user = login_form.get_user()
             login(request, user)
-            return redirect('landing_page')
+            return redirect('home:landing_page')
         else:
             context = {
                 'form': login_form
@@ -74,4 +74,4 @@ class LoginView(View):
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
-        return redirect('landing_page')
+        return redirect('home:landing_page')
