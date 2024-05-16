@@ -3,7 +3,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from .models import Book,Review
-from .forms import AddReviewForm
+from .forms import AddReviewForm,UpdateReviewForm
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect 
 from django.contrib import messages
@@ -80,8 +80,21 @@ class ReviewDeleteView(View):
         return HttpResponseRedirect(reverse_lazy('products:book_detail', kwargs={'pk': book_pk}))
 
 class ReviewUpdateView(View):
+    def get(self, request, pk):
+        data = Review.objects.get(pk=pk)
+        update_form=UpdateReviewForm(instance=data)
+        return render(request, 'book/update_review.html', {'form': update_form})    
     def post(self, request, pk):
-        review = Review.objects.get(pk=pk)
-        book_pk = review.book.pk
-        messages.error(request, "Comment yangilanmadi.")
-        return HttpResponseRedirect(reverse_lazy('products:book_detail', kwargs={'pk': book_pk}))
+        update = Review.objects.get(pk=pk)
+        update_form = UpdateReviewForm(request.POST, instance=update)
+        if update_form.is_valid():
+            update_review = update_form.save(commit=False)
+            update_review.book_id = update.book_id
+            update_review.save()
+            messages.success(request, "Comment o'zgartirildi.")
+            return redirect('products:book_detail', pk=update.book_id)  # Corrected redirect with the book's pk
+        else:
+            messages.error(request, "Comment o'zgartirilmadi.")
+            return render(request, 'book/update_review.html', {'form': update_form})  # Corrected context dictionary
+
+

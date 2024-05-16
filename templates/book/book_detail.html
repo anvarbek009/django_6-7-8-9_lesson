@@ -21,12 +21,8 @@
             <input type="submit" value="Delete">
         </form>
         <br>
-        <form method="post" action="{% url 'products:review_update' review.pk %}">
-            {% csrf_token %}
-            
-            <input type="submit" value="Update">
-        </form>
-        {% endif %}
+        <button><a href="{% url 'products:review_update' review.pk  %}">Update</a></button>
+        {% endif %} 
         <hr>
     {% endfor %}
 {% endblock content %}
